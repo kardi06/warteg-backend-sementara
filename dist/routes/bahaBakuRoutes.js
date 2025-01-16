@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const bahanBakuController_1 = require("../controllers/bahanBakuController");
+const router = (0, express_1.Router)();
+router.get("/", bahanBakuController_1.getBahanBaku);
+router.post("/", bahanBakuController_1.createBahanBaku);
+router.put("/:id", bahanBakuController_1.updateBahanBaku);
+router.delete("/:id", bahanBakuController_1.deleteBahanBaku);
+exports.default = router;

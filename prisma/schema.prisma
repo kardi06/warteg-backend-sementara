@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model BahanBaku {
+  bahanBakuId   String  @id
+  namaBahanBaku String
+  supplier      String?
+  merk          String?
+  Belanja       Belanja[]
+
+  created_at  DateTime @default(now())  // Otomatis diisi saat data dibuat
+  updated_at  DateTime @updatedAt       // Otomatis diperbarui saat data diubah
+}
+
+model Belanja {
+  belanjaId     String  @id
+  bahanBakuId   String
+  namaBahanBaku String?
+  tanggal       DateTime
+  hargaSatuan   Decimal
+  qty           Int
+  hargaTotal    Decimal
+  bahanBaku     BahanBaku @relation(fields: [bahanBakuId], references: [bahanBakuId])
+
+  created_at  DateTime @default(now()) 
+  updated_at  DateTime @updatedAt
+}
+
+model Category{
+  categoryId String @id
+  categoryName String
+  Produk Produk[]
+}
+
+model Produk {
+  produkId   String  @id
+  namaProduk String
+  harga      Float
+  image      String?
+  categoryId String
+  Penjualan  Penjualan[]
+  Carts      Carts[]
+  Category   Category @relation(fields: [categoryId], references: [categoryId]) 
+
+  created_at  DateTime @default(now()) 
+  updated_at  DateTime @updatedAt
+}
+
+model Carts {
+  cartsId     String     @id
+  price       Decimal
+  productName String
+  qty         Int
+  totalPrice  Decimal
+  note        String
+  produkId    String
+  produk      Produk @relation(fields: [produkId], references: [produkId])
+}
+
+model Penjualan {
+  penjualanId   String  @id
+  produkId      String
+  produk        Produk @relation(fields: [produkId], references: [produkId])
+  tanggal       DateTime
+  harga         Float
+  qty           Int
+  hargaTotal    Float
+
+  created_at  DateTime @default(now()) 
+  updated_at  DateTime @updatedAt
+}
