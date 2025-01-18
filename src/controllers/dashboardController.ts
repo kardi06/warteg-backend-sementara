@@ -95,12 +95,12 @@ export const getDashboardData = async (req: Request, res: Response) => {
       { date: Date; totalPenjualan: number }[]
     >`
       SELECT
-        TO_CHAR(tanggal, 'YYYY-MM-DD') AS date, 
-        SUM(hargaTotal) AS totalPenjualan
-      FROM "Penjualan" 
-      WHERE tanggal BETWEEN ${startDate} AND ${endDate}
-      GROUP BY TO_CHAR(tanggal, 'YYYY-MM-DD')
-      ORDER BY TO_CHAR(tanggal, 'YYYY-MM-DD') ASC
+        DATE_TRUNC('day', "tanggal") as "date",
+        SUM("hargaTotal") as "totalPenjualan"
+      FROM "Penjualan"
+      WHERE "tanggal" BETWEEN ${startDate} AND ${endDate}
+      GROUP BY DATE_TRUNC('day', "tanggal")
+      ORDER BY DATE_TRUNC('day', "tanggal") ASC
     `;
 
     // Hasil salesTrendRaw => [ { date: 2023-10-01, totalPenjualan: 200000 }, ... ]
@@ -113,12 +113,12 @@ export const getDashboardData = async (req: Request, res: Response) => {
       { date: Date; totalBelanja: number }[]
     >`
       SELECT
-        TO_CHAR(tanggal, 'YYYY-MM-DD') AS date, 
-        SUM(hargaTotal) AS totalBelanja
-      FROM "Belanja" 
-      WHERE tanggal BETWEEN ${startDate} AND ${endDate}
-      GROUP BY TO_CHAR(tanggal, 'YYYY-MM-DD')
-      ORDER BY TO_CHAR(tanggal, 'YYYY-MM-DD') ASC
+        DATE_TRUNC('day', "tanggal") as "date",
+        SUM("hargaTotal") as "totalBelanja"
+      FROM "Belanja"
+      WHERE "tanggal" BETWEEN ${startDate} AND ${endDate}
+      GROUP BY DATE_TRUNC('day', "tanggal")
+      ORDER BY DATE_TRUNC('day', "tanggal") ASC
     `;
 
     /**
