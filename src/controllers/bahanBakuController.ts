@@ -12,7 +12,6 @@ export const getBahanBaku = async (req: Request, res: Response): Promise<void> =
             where: {
                 namaBahanBaku: {
                     contains: search,
-                    mode: 'insensitive',
                 },
             },
             orderBy: {

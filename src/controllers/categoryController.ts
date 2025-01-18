@@ -10,7 +10,6 @@ export const getCategory = async (req: Request, res: Response): Promise<void> =>
             where: {
                 categoryName:{
                     contains: search,
-                    mode: 'insensitive'
                 }
             }
         });

@@ -39,7 +39,6 @@ export const getProduk = async (req: Request, res: Response): Promise<void> => {
                     {
                         namaProduk: {
                             contains: search,
-                            mode: 'insensitive',
                         },
                     },
                     {

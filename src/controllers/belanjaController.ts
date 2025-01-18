@@ -7,46 +7,36 @@ const prisma = new PrismaClient();
 export const getBelanja = async (req: Request, res: Response): Promise<void> => {
     try {
         
-        const search = req.query.search?.toString() || '';
-        const tanggal = req.query.tanggal?.toString() || '';
+        const { search, startDate, endDate } = req.query;
 
-        // const searchCondition = search ? {
-        //         namaBahanBaku: { 
-        //             contains: search.toString(), 
-        //             mode: 'insensitive' 
-        //         }    
-        // } : ('');
+    // Pastikan startDate dan endDate diubah ke tipe Date jika ada
+    const parsedStartDate = startDate ? new Date(startDate as string) : undefined;
+    const parsedEndDate = endDate ? new Date(endDate as string) : undefined;
 
-        // const tanggalCondition = tanggal ? 
-        // {
-        //     tanggal: {
-        //         gte: new Date(tanggal.toString()), // Filter untuk tanggal lebih besar atau sama dengan input
-        //     },
-        // }: {};
-
-        const belanja = await prisma.belanja.findMany({
-            where: {
-                AND: [
-                    {
+    const belanja = await prisma.belanja.findMany({
+        where: {
+            AND: [
+                search
+                    ? {
                         namaBahanBaku: {
-                            contains: search,
-                            mode: 'insensitive',
+                        contains: search as string,
                         },
-                    },
-                    {
+                    }
+                : {},
+                parsedStartDate || parsedEndDate
+                    ? {
                         tanggal: {
-                            equals: new Date(tanggal.toString()),
-                        }
-                    },
-                ],
-            },
-            include: {
-                bahanBaku: true,
-            },
-            orderBy: {
-                created_at: 'desc',
-            },
-        });
+                            gte: parsedStartDate,
+                            lte: parsedEndDate,
+                        },
+                    }
+                : {},
+            ],
+        },
+        orderBy: {
+            tanggal: "desc",
+        },
+    });
 
         res.json(belanja);
     } catch (error) {
